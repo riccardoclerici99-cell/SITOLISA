@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Una cosa importante 🌸</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --green:   #4a7c59;
+      --sage:    #a8c5a0;
+      --peach:   #f2b896;
+      --cream:   #fdf6ee;
+      --dark:    #2d2d2d;
+      --blush:   #f7dfd4;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    /* ─── PROGRESS DOTS ─── */
+    #dots {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 100;
+    }
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--sage);
+      cursor: pointer;
+      transition: background .3s, transform .3s;
+    }
+    .dot.active { background: var(--green); transform: scale(1.4); }
+
+    /* ─── SLIDE BASE ─── */
+    .slide {
+      min-height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 60px 40px;
+    }
+
+    /* ─── FLOATING PETALS (SVG inline) ─── */
+    .petals {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .petal {
+      position: absolute;
+      opacity: 0;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(-60px) rotate(0deg);   opacity: 0; }
+      10%  { opacity: .7; }
+      90%  { opacity: .5; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ─── SLIDE 1 — HERO ─── */
+    #s1 { background: linear-gradient(160deg, #fdf0e8 0%, #e8f2e8 100%); }
+    #s1 .content {
+      text-align: center;
+      z-index: 2;
+      animation: fadeUp .9s ease both;
+    }
+    #s1 h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      color: var(--green);
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    #s1 .sub {
+      font-size: 1.1rem;
+      color: #888;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    #s1 .arrow {
+      margin-top: 50px;
+      font-size: 2rem;
+      color: var(--sage);
+      animation: bounce 1.5s ease-in-out infinite;
+      cursor: pointer;
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(10px); }
+    }
+
+    /* big floral deco behind title */
+    .floral-bg {
+      position: absolute;
+      font-size: 18vw;
+      opacity: .06;
+      user-select: none;
+      z-index: 1;
+    }
+
+    /* ─── TEXT SLIDES ─── */
+    .text-slide {
+      flex-direction: column;
+      text-align: center;
+    }
+    .text-slide .slide-inner {
+      max-width: 680px;
+      z-index: 2;
+      animation: fadeUp .8s ease both;
+    }
+    .text-slide .slide-num {
+      font-size: .75rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 18px;
+    }
+    .text-slide p.big {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      line-height: 1.5;
+      color: var(--dark);
+    }
+    .text-slide p.big em {
+      font-style: italic;
+      color: var(--green);
+    }
+    .leaf-deco {
+      font-size: 3.5rem;
+      margin-bottom: 24px;
+      display: block;
+      animation: wiggle 3s ease-in-out infinite;
+    }
+    @keyframes wiggle {
+      0%,100% { transform: rotate(-5deg); }
+      50%      { transform: rotate(5deg); }
+    }
+
+    /* alternating bg */
+    #s2 { background: linear-gradient(145deg, #f0f7ee 0%, #fdf6ee 100%); }
+    #s3 { background: linear-gradient(145deg, #fdf6ee 0%, #fbeee8 100%); }
+
+    /* ─── PHOTO SLIDE — PIZZERIA ─── */
+    #s4 {
+      background: var(--dark);
+      flex-direction: column;
+      text-align: center;
+    }
+    #s4 .pizza-frame {
+      position: relative;
+      width: min(520px, 90vw);
+      z-index: 2;
+      animation: fadeUp .9s ease both;
+    }
+    #s4 .pizza-frame img {
+      width: 100%;
+      border-radius: 18px;
+      display: block;
+      box-shadow: 0 30px 80px rgba(0,0,0,.5);
+    }
+    #s4 .pizza-label {
+      margin-top: 28px;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      color: var(--peach);
+    }
+    #s4 .pizza-sub {
+      margin-top: 10px;
+      font-size: .9rem;
+      color: #aaa;
+      letter-spacing: .1em;
+    }
+    /* decorative border corners */
+    #s4 .pizza-frame::before,
+    #s4 .pizza-frame::after {
+      content: '🌿';
+      position: absolute;
+      font-size: 2.2rem;
+    }
+    #s4 .pizza-frame::before { top: -18px; left: -18px; transform: rotate(-30deg); }
+    #s4 .pizza-frame::after  { bottom: -18px; right: -18px; transform: rotate(150deg); }
+
+    /* ─── PHOTO SLIDE — YOUR PHOTO ─── */
+    #s5 {
+      background: linear-gradient(160deg, #fbeee8 0%, #e8f2e8 100%);
+      flex-direction: column;
+      text-align: center;
+    }
+    #s5 .photo-wrap {
+      position: relative;
+      width: min(460px, 88vw);
+      z-index: 2;
+      animation: fadeUp .9s ease both;
+    }
+    #s5 .photo-wrap img {
+      width: 100%;
+      border-radius: 50% 12px 50% 12px; /* organic shape */
+      display: block;
+      box-shadow: 0 20px 60px rgba(74,124,89,.25);
+      object-fit: cover;
+      aspect-ratio: 1;
+    }
+    /* placeholder when no image */
+    #s5 .photo-placeholder {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 50% 12px 50% 12px;
+      background: linear-gradient(135deg, var(--sage), var(--blush));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: white;
+      box-shadow: 0 20px 60px rgba(74,124,89,.25);
+    }
+    #s5 .photo-placeholder span {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      margin-top: 12px;
+      opacity: .8;
+      letter-spacing: .1em;
+    }
+    #s5 .photo-caption {
+      margin-top: 26px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.2rem, 3vw, 1.7rem);
+      color: var(--green);
+    }
+
+    /* ─── MUSIC PLAYER ─── */
+    #player {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(168,197,160,.4);
+      border-radius: 50px;
+      padding: 10px 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 8px 32px rgba(74,124,89,.15);
+      cursor: pointer;
+      transition: transform .2s;
+    }
+    #player:hover { transform: translateX(-50%) scale(1.03); }
+    #player .note { font-size: 1.3rem; animation: spin 4s linear infinite paused; }
+    #player.playing .note { animation-play-state: running; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #player .label {
+      font-size: .82rem;
+      color: var(--green);
+      font-weight: 600;
+      letter-spacing: .05em;
+    }
+    #player .track {
+      font-size: .75rem;
+      color: #999;
+      max-width: 160px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #player .btn {
+      font-size: 1.1rem;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    #player .btn:hover { background: #3a6447; }
+
+    /* ─── UTILITIES ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .branch {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+      opacity: .12;
+      font-size: 9vw;
+      user-select: none;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 600px) {
+      #dots { right: 12px; }
+      .slide { padding: 50px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Progress dots -->
+<nav id="dots">
+  <div class="dot active" onclick="goTo(0)"></div>
+  <div class="dot"        onclick="goTo(1)"></div>
+  <div class="dot"        onclick="goTo(2)"></div>
+  <div class="dot"        onclick="goTo(3)"></div>
+  <div class="dot"        onclick="goTo(4)"></div>
+</nav>
+
+<!-- Music player -->
+<div id="player" onclick="toggleMusic()">
+  <span class="note">🎵</span>
+  <div>
+    <div class="label">Musica</div>
+    <!-- 
+      ════════════════════════════════════════════
+      🎵 COME AGGIUNGERE LA TUA CANZONE:
+      1. Metti il file audio (mp3/ogg) nella stessa 
+         cartella di questo index.html
+      2. Sostituisci "LA_TUA_CANZONE.mp3" qui sotto
+      3. Aggiorna il testo "La tua canzone - Artista"
+      ════════════════════════════════════════════
+    -->
+    <div class="track" id="trackName">La tua canzone - Artista</div>
+  </div>
+  <button class="btn" id="playBtn">▶</button>
+</div>
+<audio id="audio" loop>
+  <source src="LA_TUA_CANZONE.mp3" type="audio/mpeg">
+</audio>
+
+<!-- ══════════════ SLIDE 1 — INTRO ══════════════ -->
+<section class="slide" id="s1">
+  <div class="petals" id="petals1"></div>
+  <span class="floral-bg">🌸</span>
+  <div class="content">
+    <p class="sub">Una cosa importante</p>
+    <h1>Ho qualcosa<br/>da dirti 🌿</h1>
+    <div class="arrow" onclick="goTo(1)">↓</div>
+  </div>
+</section>
+
+<!-- ══════════════ SLIDE 2 — FRASE 1 ══════════════ -->
+<section class="slide text-slide" id="s2">
+  <span class="branch" style="top:-2%;left:-3%;transform:rotate(20deg)">🌿</span>
+  <div class="slide-inner">
+    <span class="leaf-deco">🌱</span>
+    <div class="slide-num">01</div>
+    <!-- 
+      ════════════════════════════════════════
+      ✏️  SOSTITUISCI IL TESTO QUI SOTTO 
+          con la tua prima frase
+      ════════════════════════════════════════
+    -->
+    <p class="big">
+      "[La tua prima frase qui]"
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════ SLIDE 3 — FRASE 2 ══════════════ -->
+<section class="slide text-slide" id="s3">
+  <span class="branch" style="bottom:-2%;right:-3%;transform:rotate(-15deg)">🌾</span>
+  <div class="slide-inner">
+    <span class="leaf-deco">🌼</span>
+    <div class="slide-num">02</div>
+    <!-- 
+      ════════════════════════════════════════
+      ✏️  SOSTITUISCI IL TESTO QUI SOTTO 
+          con la tua seconda frase
+      ════════════════════════════════════════
+    -->
+    <p class="big">
+      "[La tua seconda frase qui]"
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════ SLIDE 4 — PIZZERIA ══════════════ -->
+<section class="slide" id="s4">
+  <div class="petals" id="petals4"></div>
+  <div class="pizza-frame">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!4v1!8m2!1m1!2e0!3m4!1s0x477fd4a5b1f1f1f1%3A0x0!2e0!7i16384!8i8192!4m3!11m2!2sChIJ6VFnCqhafkgRt4JMIZQZ6MI!3e2!1m0!3m2!1sit!2sit!4v1&pb=!1m18!1m12!1m3!1d400!2d11.3270!3d44.4870!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x477fd3b94f6c9a59%3A0xe0e7e7e7e7e7e7e7!2sVia+Olindo+Guerrini%2C+23%2FC%2C+40134+Bologna+BO!5e0!3m2!1sit!2sit!4v1"
+      width="100%" style="aspect-ratio:4/3;border-radius:18px;border:0;display:block;box-shadow:0 30px 80px rgba(0,0,0,.5);"
+      allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+  <p class="pizza-label">Stasera, pizza insieme? 🍕</p>
+  <p class="pizza-sub">La Pizza Nero &amp; Invidia · Via Olindo Guerrini 23/c, Bologna</p>
+</section>
+
+<!-- ══════════════ SLIDE 5 — VOSTRA FOTO ══════════════ -->
+<section class="slide" id="s5">
+  <div class="photo-wrap">
+    <!-- 
+      ════════════════════════════════════════════
+      📸 LA TUA FOTO:
+      Sostituisci questo blocco con:
+        <img src="foto.jpg" alt="noi" />
+      mettendo il file foto.jpg nella stessa 
+      cartella di index.html
+      ════════════════════════════════════════════
+    -->
+    <div class="photo-placeholder">
+      📸
+      <span>la vostra foto qui</span>
+    </div>
+  </div>
+  <!-- ✏️ Personalizza la didascalia -->
+  <p class="photo-caption">"[La tua ultima frase — o semplicemente il vostro nome] 🌸"</p>
+</section>
+
+<script>
+  // ── Petals ──
+  function makePetals(containerId, count = 12) {
+    const c = document.getElementById(containerId);
+    if (!c) return;
+    const emojis = ['🌸','🌺','🌼','🍃','🌿','✿'];
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('span');
+      el.className = 'petal';
+      el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      el.style.cssText = `
+        left:${Math.random()*100}%;
+        font-size:${0.8 + Math.random()*1.4}rem;
+        animation-duration:${5 + Math.random()*8}s;
+        animation-delay:${-Math.random()*10}s;
+      `;
+      c.appendChild(el);
+    }
+  }
+  makePetals('petals1', 14);
+  makePetals('petals4', 8);
+
+  // ── Scroll spy for dots ──
+  const slides = document.querySelectorAll('.slide');
+  const dots   = document.querySelectorAll('.dot');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const i = [...slides].indexOf(e.target);
+        dots.forEach((d,j) => d.classList.toggle('active', i===j));
+      }
+    });
+  }, { threshold: 0.5 });
+  slides.forEach(s => observer.observe(s));
+
+  function goTo(i) {
+    slides[i].scrollIntoView({ behavior:'smooth' });
+  }
+
+  // ── Music ──
+  const audio   = document.getElementById('audio');
+  const playBtn = document.getElementById('playBtn');
+  const player  = document.getElementById('player');
+  let playing   = false;
+
+  function toggleMusic() {
+    if (playing) {
+      audio.pause();
+      playBtn.textContent = '▶';
+      player.classList.remove('playing');
+    } else {
+      audio.play().catch(() => {});
+      playBtn.textContent = '⏸';
+      player.classList.add('playing');
+    }
+    playing = !playing;
+  }
+</script>
+</body>
+</html>
